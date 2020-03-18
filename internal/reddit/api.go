@@ -12,6 +12,7 @@ import (
 
 // Post is a reddit post
 type Post struct {
+	ID        string `json:"id"`
 	Title     string `json:"title"`
 	Author    string `json:"author"`
 	Permalink string `json:"permalink"`
