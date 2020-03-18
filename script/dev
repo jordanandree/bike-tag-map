@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -euo pipefail
+
+ROOT=$(git rev-parse --show-toplevel)
+cd $ROOT
+
+echo "Running backend server at https://127.0.0.1:8080"
+go run cmd/bike-tag-map/main.go &
+PID1=$!
+
+echo "Running frontend server at https://127.0.0.1:3000"
+cd app && npm run start
+PID2=$!
+
+cd $ROOT
+wait $PID1 $PID2
