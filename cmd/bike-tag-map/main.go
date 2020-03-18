@@ -9,17 +9,23 @@ import (
 	"bike-tag-map/internal/reddit"
 )
 
-func main() {
+func postsHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
+
 	posts := reddit.GetPosts()
-	http.HandleFunc("/posts", func(w http.ResponseWriter, r *http.Request) {
-		json, err := json.Marshal(posts)
+	json, err := json.Marshal(posts)
 
-		if err != nil {
-			log.Printf("Error encoding JSON: %v", err.Error())
-		}
+	if err != nil {
+		log.Printf("Error encoding JSON: %v", err.Error())
+	}
 
-		w.Write(json)
-	})
+	w.Write(json)
+}
 
-	http.ListenAndServe(":8080", nil)
+func main() {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/posts", postsHandler)
+
+	log.Fatal(http.ListenAndServe(":8080", mux))
 }
